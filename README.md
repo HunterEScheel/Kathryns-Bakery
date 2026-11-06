@@ -12,6 +12,7 @@ React + Vite PWA for Kathryn's Bakery: a public site, plus admin tools for inven
 | `/featured` | Featured This Week |
 | `/recipes`, `/recipes/:slug` | Recipes & Ingredients (search, "free from" allergen filter, ingredient glossary) |
 | `/products` | Products, with ingredients and allergens |
+| `/timeline` | Timeline of upcoming events. Each event disappears on its own once its last day has passed |
 
 **Admin (`/admin`, needs a row in `site_admins`)**
 
@@ -23,13 +24,14 @@ React + Vite PWA for Kathryn's Bakery: a public site, plus admin tools for inven
 | `/admin/recipes` | Recipes with their ingredient lines |
 | `/admin/ingredients` | Ingredient master list with allergens |
 | `/admin/featured` | Pick products for "Featured This Week", with date ranges |
+| `/admin/timeline` | Add, edit, copy and delete Timeline events (past ones stay here, faded) |
 | `/admin/about` | Edit the About Us / Our Mission text |
 
 ## 1. Supabase setup
 
 The bakery shares a Supabase project with other apps, so everything it creates is prefixed `bakery_` (tables, functions, triggers, and the `bakery-images` bucket). It uses the project's existing Auth users, and its admin check uses the shared `site_admins` table and `is_site_admin()` function.
 
-1. In the **SQL Editor**, run `supabase/migrations/0001_init.sql`. You can also run `supabase/seed.sql` for starter content. Both are safe to re-run.
+1. In the **SQL Editor**, run the files in `supabase/migrations/` in order (`0001_init.sql`, then `0002_timeline.sql`). You can also run `supabase/seed.sql` for starter content. Both are safe to re-run.
 2. Staff sign in with their existing accounts in the project. To add someone new, use **Authentication → Users**, or let them use magic-link sign-in.
 3. Give someone admin access, if they don't already have it from another app:
    ```sql

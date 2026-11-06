@@ -60,6 +60,18 @@ export interface FeaturedItem {
   product?: Product;
 }
 
+export interface TimelineEvent {
+  id: string;
+  title: string;
+  description: string | null;
+  starts_on: string;
+  ends_on: string | null;
+  time_label: string | null;
+  location: string | null;
+  /** Generated: ends_on, or starts_on for one-day events. Read-only. */
+  last_day: string;
+}
+
 export type InventoryCategory = 'ingredient' | 'packaging' | 'finished_good' | 'supply';
 export type TxReason = 'receive' | 'use' | 'waste' | 'adjust' | 'sale' | 'count';
 

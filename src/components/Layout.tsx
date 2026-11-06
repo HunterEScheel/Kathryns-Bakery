@@ -7,6 +7,7 @@ import UpdatePrompt from './UpdatePrompt';
 const PUBLIC_NAV = [
   { to: '/', label: 'About Us', end: true },
   { to: '/featured', label: 'Featured This Week' },
+  { to: '/timeline', label: 'Timeline' },
   { to: '/recipes', label: 'Recipes & Ingredients' },
   { to: '/products', label: 'Products' },
 ];
@@ -18,6 +19,7 @@ const ADMIN_NAV = [
   { to: '/admin/recipes', label: 'Recipes' },
   { to: '/admin/ingredients', label: 'Ingredients' },
   { to: '/admin/featured', label: 'Featured' },
+  { to: '/admin/timeline', label: 'Timeline' },
   { to: '/admin/about', label: 'About page' },
 ];
 

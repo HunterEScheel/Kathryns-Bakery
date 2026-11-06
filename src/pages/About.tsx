@@ -6,7 +6,7 @@ import type { SiteContent } from '../lib/types';
 
 // Shown only when bakery_site_content has no rows yet.
 const FALLBACK: SiteContent[] = [
-  { key: 'about', title: 'About Us', body: 'Small-batch baking, made from scratch every morning.' },
+  { key: 'about', title: 'About Us', body: 'Small-batch, 100% gluten-free desserts, made from scratch.' },
   { key: 'mission', title: 'Our Mission', body: 'Simple, honest ingredients — labeled clearly so you always know what you are eating.' },
 ];
 
@@ -23,7 +23,7 @@ export default function About() {
     <>
       <section className="hero">
         <h1>Kathryn&rsquo;s Bakery</h1>
-        <p className="lede">From-scratch breads, cookies and pastries — baked fresh in small batches.</p>
+        <p className="lede">A dedicated gluten-free dessert bakery: cookies, brownies, bars, pies, banana bread and cheesecakes, baked from scratch in small batches.</p>
       </section>
       {loading ? (
         <Loading />

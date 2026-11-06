@@ -7,6 +7,7 @@ import RequireAdmin from './components/RequireAdmin';
 import Loading from './components/Loading';
 import About from './pages/About';
 import Featured from './pages/Featured';
+import Timeline from './pages/Timeline';
 import Recipes from './pages/Recipes';
 import RecipeDetail from './pages/RecipeDetail';
 import Products from './pages/Products';
@@ -20,6 +21,7 @@ const ManageProducts = lazy(() => import('./pages/admin/ManageProducts'));
 const ManageRecipes = lazy(() => import('./pages/admin/ManageRecipes'));
 const ManageIngredients = lazy(() => import('./pages/admin/ManageIngredients'));
 const ManageFeatured = lazy(() => import('./pages/admin/ManageFeatured'));
+const ManageTimeline = lazy(() => import('./pages/admin/ManageTimeline'));
 const ManageAbout = lazy(() => import('./pages/admin/ManageAbout'));
 
 function AdminShell() {
@@ -40,6 +42,7 @@ export default function App() {
           <Route element={<Layout />}>
             <Route index element={<About />} />
             <Route path="featured" element={<Featured />} />
+            <Route path="timeline" element={<Timeline />} />
             <Route path="recipes" element={<Recipes />} />
             <Route path="recipes/:slug" element={<RecipeDetail />} />
             <Route path="products" element={<Products />} />
@@ -52,6 +55,7 @@ export default function App() {
                 <Route path="recipes" element={<ManageRecipes />} />
                 <Route path="ingredients" element={<ManageIngredients />} />
                 <Route path="featured" element={<ManageFeatured />} />
+                <Route path="timeline" element={<ManageTimeline />} />
                 <Route path="about" element={<ManageAbout />} />
               </Route>
             </Route>

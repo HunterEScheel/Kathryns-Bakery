@@ -745,3 +745,46 @@ details.help li {
   color: var(--bg);
   border-color: var(--bg);
 }
+
+/* timeline */
+.timeline {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0 0 0 1.25rem;
+  border-left: 2px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.timeline li {
+  position: relative;
+}
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: calc(-1.25rem - 7px);
+  top: 0.35rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--brand-2);
+}
+.timeline li.now::before {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+.timeline-date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--brand);
+  margin-bottom: 0.4rem;
+}
+.timeline-card h2 {
+  margin-bottom: 0.25rem;
+}
+.timeline-card p:last-child {
+  margin-bottom: 0;
+}

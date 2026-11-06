@@ -9,6 +9,7 @@ import type {
   Recipe,
   RecipeIngredient,
   SiteContent,
+  TimelineEvent,
   TxReason,
 } from './types';
 
@@ -107,6 +108,23 @@ export const saveFeatured = async (f: Partial<FeaturedItem>) => {
 
 export const deleteFeatured = async (id: string) =>
   unwrap(await supabase.from('bakery_featured_items').delete().eq('id', id));
+
+// ---------- timeline ----------
+/** upcomingOnly hides events whose last day is before today (visitor's local date). */
+export const listTimeline = async (upcomingOnly: boolean) => {
+  let q = supabase.from('bakery_timeline_events').select('*').order('starts_on').order('title');
+  if (upcomingOnly) q = q.gte('last_day', isoDate(new Date()));
+  return unwrap(await q) as TimelineEvent[];
+};
+
+export const saveTimelineEvent = async (t: Partial<TimelineEvent>) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { last_day: _l, ...row } = t;
+  return unwrap(await supabase.from('bakery_timeline_events').upsert(row).select().single()) as TimelineEvent;
+};
+
+export const deleteTimelineEvent = async (id: string) =>
+  unwrap(await supabase.from('bakery_timeline_events').delete().eq('id', id));
 
 // ---------- inventory ----------
 export const listInventory = async () =>
