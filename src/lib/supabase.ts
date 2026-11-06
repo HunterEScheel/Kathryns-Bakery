@@ -15,10 +15,12 @@ export function unwrap<T>(res: { data: T | null; error: { message: string } | nu
   return res.data as T;
 }
 
+const IMAGE_BUCKET = 'bakery-images';
+
 export async function uploadImage(file: File, folder: string): Promise<string> {
   const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
   const path = `${folder}/${crypto.randomUUID()}.${ext}`;
-  const { error } = await supabase.storage.from('images').upload(path, file, { upsert: false, contentType: file.type });
+  const { error } = await supabase.storage.from(IMAGE_BUCKET).upload(path, file, { upsert: false, contentType: file.type });
   if (error) throw new Error(error.message);
-  return supabase.storage.from('images').getPublicUrl(path).data.publicUrl;
+  return supabase.storage.from(IMAGE_BUCKET).getPublicUrl(path).data.publicUrl;
 }

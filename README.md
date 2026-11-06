@@ -13,7 +13,7 @@ React + Vite PWA for Kathryn's Bakery: a public site, plus admin tools for inven
 | `/recipes`, `/recipes/:slug` | Recipes & Ingredients (search, "free from" allergen filter, ingredient glossary) |
 | `/products` | Products, with ingredients and allergens |
 
-**Admin (`/admin`, needs `profiles.role = 'admin'`)**
+**Admin (`/admin`, needs a row in `site_admins`)**
 
 | Route | What it does |
 | --- | --- |
@@ -27,16 +27,20 @@ React + Vite PWA for Kathryn's Bakery: a public site, plus admin tools for inven
 
 ## 1. Supabase setup
 
-1. Create a project at [supabase.com](https://supabase.com).
-2. In the **SQL Editor**, run `supabase/migrations/0001_init.sql`. You can also run `supabase/seed.sql` for starter content.
-3. Under **Authentication → Users**, add a user for each staff member, or let them use magic-link sign-in.
-4. Make yourself an admin:
-   ```sql
-   update public.profiles set role = 'admin' where email = 'you@example.com';
-   ```
-5. Under **Authentication → URL Configuration**, set the Site URL to your Vercel domain and add `http://localhost:5173/**` to the redirect URLs.
+The bakery shares a Supabase project with other apps, so everything it creates is prefixed `bakery_` (tables, functions, triggers, and the `bakery-images` bucket). It uses the project's existing Auth users, and its admin check uses the shared `site_admins` table and `is_site_admin()` function.
 
-Row-level security works like this: the public can read active products, public recipes, ingredients, featured items and site content. Only admins can write, and only admins can see inventory. Photos go into a public `images` storage bucket that the migration creates.
+1. In the **SQL Editor**, run `supabase/migrations/0001_init.sql`. You can also run `supabase/seed.sql` for starter content. Both are safe to re-run.
+2. Staff sign in with their existing accounts in the project. To add someone new, use **Authentication → Users**, or let them use magic-link sign-in.
+3. Give someone admin access, if they don't already have it from another app:
+   ```sql
+   insert into public.site_admins (user_id)
+   select id from auth.users where email = 'you@example.com'
+   on conflict (user_id) do nothing;
+   ```
+   Admin access applies across every app in the project that checks `site_admins`.
+4. Under **Authentication → URL Configuration**, add your Vercel domain and `http://localhost:5173/**` to the redirect URLs.
+
+Row-level security works like this: the public can read active products, public recipes, ingredients, featured items and site content. Only site admins can write, and only site admins can see inventory. Photos go into a public `bakery-images` storage bucket that the migration creates.
 
 ## 2. Local development
 
@@ -50,7 +54,7 @@ npm run dev
 
 1. Import the GitHub repo in Vercel. It detects the framework as Vite, and `vercel.json` handles SPA rewrites and service-worker caching.
 2. Add the environment variables `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` for Production and Preview.
-3. Deploy, then add the Vercel URL to the Supabase auth URL settings (step 1.5).
+3. Deploy, then add the Vercel URL to the Supabase auth URL settings (step 1.4).
 
 ## 4. Zebra GK420d label printing
 

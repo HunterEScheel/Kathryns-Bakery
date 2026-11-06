@@ -1,11 +1,3 @@
-export type Role = 'member' | 'admin';
-
-export interface Profile {
-  id: string;
-  email: string | null;
-  role: Role;
-}
-
 export interface SiteContent {
   key: string;
   title: string;

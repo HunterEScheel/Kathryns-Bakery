@@ -1,11 +1,9 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase, supabaseConfigured } from './supabase';
-import type { Profile } from './types';
 
 interface AuthState {
   session: Session | null;
-  profile: Profile | null;
   isAdmin: boolean;
   loading: boolean;
   signOut: () => Promise<void>;
@@ -13,7 +11,6 @@ interface AuthState {
 
 const AuthContext = createContext<AuthState>({
   session: null,
-  profile: null,
   isAdmin: false,
   loading: true,
   signOut: async () => {},
@@ -21,7 +18,7 @@ const AuthContext = createContext<AuthState>({
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(supabaseConfigured);
 
   useEffect(() => {
@@ -35,27 +32,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!supabaseConfigured) return;
     const uid = session?.user.id;
     if (!uid) {
-      setProfile(null);
+      setIsAdmin(false);
       // getSession resolves quickly; only stop loading once we know there's no user
       supabase.auth.getSession().then(() => setLoading(false));
       return;
     }
     setLoading(true);
-    supabase
-      .from('profiles')
-      .select('id,email,role')
-      .eq('id', uid)
-      .maybeSingle()
-      .then(({ data }) => {
-        setProfile((data as Profile) ?? null);
-        setLoading(false);
-      });
+    // Admins are listed in the project-wide public.site_admins table.
+    supabase.rpc('is_site_admin').then(({ data }) => {
+      setIsAdmin(data === true);
+      setLoading(false);
+    });
   }, [session?.user.id]);
 
   const value: AuthState = {
     session,
-    profile,
-    isAdmin: profile?.role === 'admin',
+    isAdmin,
     loading,
     signOut: async () => {
       await supabase.auth.signOut();

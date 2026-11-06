@@ -13,7 +13,7 @@ export default function RequireAdmin() {
         <h1>Admins only</h1>
         <p>
           You&rsquo;re signed in as <strong>{session.user.email}</strong>, but this account doesn&rsquo;t have admin
-          access. Ask an owner to set your role to <code>admin</code> in the <code>profiles</code> table.
+          access. Ask an owner to add your user to the <code>site_admins</code> table.
         </p>
       </div>
     );
