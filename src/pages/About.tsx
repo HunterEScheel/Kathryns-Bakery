@@ -10,14 +10,9 @@ const FALLBACK: SiteContent[] = [
   { key: 'mission', title: 'Our Mission', body: 'Simple, honest ingredients — labeled clearly so you always know what you are eating.' },
 ];
 
-// "about" and "mission" lead; any other sections follow alphabetically by key.
-const LEAD = ['about', 'mission'];
-const rank = (k: string) => (LEAD.includes(k) ? LEAD.indexOf(k) : LEAD.length);
-const bySection = (a: SiteContent, b: SiteContent) => rank(a.key) - rank(b.key) || a.key.localeCompare(b.key);
-
 export default function About() {
   const { data, error, loading } = useAsync(getContent);
-  const sections = data?.length ? [...data].sort(bySection) : FALLBACK;
+  const sections = data?.length ? data : FALLBACK;
 
   return (
     <>

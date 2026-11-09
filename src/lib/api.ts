@@ -21,8 +21,18 @@ const sortRI = (r: Recipe) => {
 };
 
 // ---------- site content ----------
+// "about" and "mission" lead; any other sections follow alphabetically by key.
+const LEAD_SECTIONS = ['about', 'mission'];
+const sectionRank = (k: string) => (LEAD_SECTIONS.includes(k) ? LEAD_SECTIONS.indexOf(k) : LEAD_SECTIONS.length);
+export const bySection = (a: SiteContent, b: SiteContent) =>
+  sectionRank(a.key) - sectionRank(b.key) || a.key.localeCompare(b.key);
+
+/** All About-page sections, in display order. */
 export const getContent = async () =>
-  unwrap(await supabase.from('bakery_site_content').select('*')) as SiteContent[];
+  (unwrap(await supabase.from('bakery_site_content').select('*')) as SiteContent[]).sort(bySection);
+
+export const deleteContent = async (key: string) =>
+  unwrap(await supabase.from('bakery_site_content').delete().eq('key', key));
 
 export const saveContent = async (c: SiteContent) =>
   unwrap(await supabase.from('bakery_site_content').upsert(c).select().single()) as SiteContent;
